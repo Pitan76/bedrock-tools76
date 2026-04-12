@@ -1,7 +1,7 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
-    id 'com.matthewprenger.cursegradle' version '1.+'
+    id "architectury-plugin" version "3.5-SNAPSHOT"
+    id "dev.architectury.loom-no-remap" version "1.14-SNAPSHOT" apply false
+    id 'com.matthewprenger.cursegradle' version '1.5.0-SNAPSHOT'
     id "com.modrinth.minotaur" version "2.+"
 }
 
@@ -10,13 +10,9 @@ architectury {
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: "dev.architectury.loom-no-remap"
     apply plugin: "com.modrinth.minotaur"
     apply plugin: "com.matthewprenger.cursegradle"
-
-    loom {
-        silentMojangMappingsLicense()
-    }
 
     repositories {
         maven { url "https://maven.pitan76.net/" }
@@ -25,20 +21,11 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-
-        // Mojang公式Mappings
-        //mappings loom.officialMojangMappings()
-
-        // The following line declares the yarn mappings you may select this one as well.
-        // FabricのYarn Mappings
-        mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
-
-        modApi "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
+        api "net.pitan76:mcpitanlib-fabric-${rootProject.mcpitanlib_version}"
     }
 
 
-    if (name in "fabric,forge".split(",")) {
+    if (name in "fabric".split(",")) {
         var modLoader = name
 
         if (System.getenv("CURSEFORGE_TOKEN") != null) {
@@ -56,35 +43,9 @@ subprojects {
                         addGameVersion "Forge"
                     }
 
-                    addGameVersion '1.16.4'
-                    addGameVersion '1.16.5'
-                    addGameVersion '1.18.1'
-                    addGameVersion '1.18.2'
-                    addGameVersion '1.19'
-                    addGameVersion '1.19.1'
-                    addGameVersion '1.19.2'
-                    addGameVersion '1.20'
-                    addGameVersion '1.20.1'
-                    addGameVersion '1.20.3'
-                    addGameVersion '1.20.4'
-
-                    if (modLoader == "fabric") {
-                        addGameVersion '1.21'
-                        addGameVersion '1.21.1'
-                        addGameVersion '1.21.2'
-                        addGameVersion '1.21.3'
-                        addGameVersion '1.21.4'
-                        addGameVersion '1.21.5'
-                        addGameVersion '1.21.6'
-                        addGameVersion '1.21.7'
-                        addGameVersion '1.21.8'
-                        addGameVersion '1.21.9'
-                        addGameVersion '1.21.10'
-                        addGameVersion '1.21.11'
-                        addGameVersion '26.1'
-                        addGameVersion '26.1.1'
-                        addGameVersion '26.1.2'
-                    }
+                    addGameVersion '26.1'
+                    addGameVersion '26.1.1'
+                    addGameVersion '26.1.2'
 
                     relations {
                         if (modLoader == "fabric") {
@@ -107,11 +68,8 @@ subprojects {
                 token = System.getenv("MODRINTH_TOKEN")
                 projectId = '9MhQ9NoM'
                 versionNumber = project.mod_version + "-" + modLoader
-                gameVersions = ['1.16.4', '1.16.5', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
 
-                if (modLoader == "fabric") {
-                    gameVersions.addAll(['1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6', '1.21.7', '1.21.8', '1.21.9', '1.21.10', '1.21.11', '26.1', '26.1.1', '26.1.2'])
-                }
+                gameVersions.addAll(['26.1', '26.1.1', '26.1.2'])
 
                 versionType = 'release'
                 uploadFile = tasks.remapJar
@@ -135,7 +93,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name
+    base.archivesName = rootProject.archives_base_name
     mod_name = rootProject.mod_name
     mod_id = rootProject.mod_id
     version = rootProject.mod_version
@@ -149,9 +107,9 @@ allprojects {
         // for more information about repositories.
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        options.release = 8
+        options.release = 25
     }
 
     java {

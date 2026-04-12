@@ -1,8 +1,8 @@
 package net.pitan76.bedrocktools.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.tool.CompatiblePickaxeItem;
 import net.pitan76.mcpitanlib.api.item.tool.CompatibleToolMaterial;
@@ -14,7 +14,7 @@ public class BedrockPickaxeItem extends CompatiblePickaxeItem implements Creativ
 
     @Override
     public boolean overrideIsSuitableFor(BlockState state) {
-        if (state.isOf(Blocks.BEDROCK)) return true;
+        if (state.is(Blocks.BEDROCK)) return true;
         return super.overrideIsSuitableFor(state);
     }
 

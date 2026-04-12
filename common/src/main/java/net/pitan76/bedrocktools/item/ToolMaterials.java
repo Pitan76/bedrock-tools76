@@ -40,7 +40,7 @@ public enum ToolMaterials implements CompatToolMaterial {
         return Config.config.getInt(configPath + ".enchantability");
     }
 
-    public net.minecraft.recipe.Ingredient getCompatRepairIngredient() {
+    public net.minecraft.world.item.crafting.Ingredient getCompatRepairIngredient() {
         return this.repairIngredient.getRaw();
     }
 

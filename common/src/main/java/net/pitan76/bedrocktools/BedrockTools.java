@@ -1,6 +1,6 @@
 package net.pitan76.bedrocktools;
 
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
 import net.pitan76.bedrocktools.cmd.BedrockToolsCommand;
 import net.pitan76.bedrocktools.item.BedrockPickaxeItem;
 import net.pitan76.bedrocktools.item.CreativeShotKillItem;
@@ -56,7 +56,7 @@ public class BedrockTools {
 
         BlockEventRegistry.ON_BREAK.register(e -> {
             Player player = e.player;
-            ItemStack stack = player.getMidohraStackInHand(Hand.MAIN_HAND);
+            ItemStack stack = player.getMidohraStackInHand(InteractionHand.MAIN_HAND);
             if (!stack.instanceOf(BedrockPickaxeItem.class) || player.isCreative())
                 return new BlockBreakResult(e.state);
 
