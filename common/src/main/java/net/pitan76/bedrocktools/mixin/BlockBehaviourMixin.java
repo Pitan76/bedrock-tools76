@@ -1,7 +1,6 @@
 package net.pitan76.bedrocktools.mixin;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.pitan76.bedrocktools.item.BedrockPickaxeItem;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(BlockBehaviour.class)
 public class BlockBehaviourMixin {
     @Inject(method = "getDestroyProgress", at = @At(value = "JUMP", opcode = Opcodes.IFNE, shift = At.Shift.AFTER), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void inject_calcBlockBreakingDelta(net.minecraft.world.level.block.state.BlockState _state, Player playerEntity, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir, float hardness) {
+    public void inject_calcBlockBreakingDelta(net.minecraft.world.level.block.state.BlockState _state, net.minecraft.world.entity.player.Player playerEntity, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir, float hardness) {
         Player player = new Player(playerEntity);
         BlockState state = BlockState.of(_state);
         ItemStack stack = ItemStack.of(player.getMainHandStack());
