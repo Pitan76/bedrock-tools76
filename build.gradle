@@ -54,7 +54,7 @@ subprojects {
                         requiredDependency 'mcpitanlibarch'
                     }
 
-                    mainArtifact(tasks.remapJar)
+                    mainArtifact(tasks.jar)
                 }
                 options {
                     forgeGradleIntegration = false
@@ -72,7 +72,7 @@ subprojects {
                 gameVersions.addAll(['26.1', '26.1.1', '26.1.2'])
 
                 versionType = 'release'
-                uploadFile = tasks.remapJar
+                uploadFile = tasks.jar
                 changelog = rootProject.changelog
                 loaders = [modLoader]
                 dependencies {
