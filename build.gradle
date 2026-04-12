@@ -23,67 +23,67 @@ subprojects {
         api "net.pitan76:mcpitanlib-fabric-${rootProject.mcpitanlib_version}"
     }
 
-    if (name in "fabric".split(",")) {
-        var modLoader = name
+    afterEvaluate {
+        if (name in "fabric".split(",")) {
+            var modLoader = name
 
-        if (System.getenv("CURSEFORGE_TOKEN") != null) {
-            curseforge {
-                apiKey = System.getenv("CURSEFORGE_TOKEN")
-                project {
-                    id = '971077'
-                    changelog = rootProject.changelog + "\nMCPitanLib: " + rootProject.mcpitanlib_version.split(":")[1]
-                    if (modLoader == "fabric") {
-                        releaseType = 'release'
-                        addGameVersion "Fabric"
-                    }
-                    if (modLoader == "forge") {
-                        releaseType = 'beta'
-                        addGameVersion "Forge"
-                    }
-
-                    addGameVersion '26.1'
-                    addGameVersion '26.1.1'
-                    addGameVersion '26.1.2'
-
-                    relations {
+            if (System.getenv("CURSEFORGE_TOKEN") != null) {
+                curseforge {
+                    apiKey = System.getenv("CURSEFORGE_TOKEN")
+                    project {
+                        id = '971077'
+                        changelog = rootProject.changelog + "\nMCPitanLib: " + rootProject.mcpitanlib_version.split(":")[1]
                         if (modLoader == "fabric") {
-                            requiredDependency "fabric-api"
+                            releaseType = 'release'
+                            addGameVersion "Fabric"
                         }
-                        requiredDependency 'mcpitanlibarch'
-                    }
+                        if (modLoader == "forge") {
+                            releaseType = 'beta'
+                            addGameVersion "Forge"
+                        }
 
-                    mainArtifact(tasks.jar)
+                        addGameVersion '26.1'
+                        addGameVersion '26.1.1'
+                        addGameVersion '26.1.2'
+
+                        relations {
+                            if (modLoader == "fabric") {
+                                requiredDependency "fabric-api"
+                            }
+                            requiredDependency 'mcpitanlibarch'
+                        }
+
+                        mainArtifact(tasks.named("shadowJar").get().archiveFile.get().asFile)
+                    }
+                    options {
+                        forgeGradleIntegration = false
+                    }
                 }
-                options {
-                    forgeGradleIntegration = false
-                }
+
             }
 
-        }
+            if (System.getenv("MODRINTH_TOKEN") != null) {
+                modrinth {
+                    token = System.getenv("MODRINTH_TOKEN")
+                    projectId = '9MhQ9NoM'
+                    versionNumber = project.mod_version + "-" + modLoader
 
-        if (System.getenv("MODRINTH_TOKEN") != null) {
-            modrinth {
-                token = System.getenv("MODRINTH_TOKEN")
-                projectId = '9MhQ9NoM'
-                versionNumber = project.mod_version + "-" + modLoader
+                    gameVersions.addAll(['26.1', '26.1.1', '26.1.2'])
 
-                gameVersions.addAll(['26.1', '26.1.1', '26.1.2'])
-
-                versionType = 'release'
-                uploadFile = tasks.jar
-                changelog = rootProject.changelog
-                loaders = [modLoader]
-                dependencies {
-                    if (modLoader == "fabric") {
-                        required.project "P7dR8mSH" // Fabric API
+                    versionType = 'release'
+                    uploadFile = tasks.named("shadowJar").get().archiveFile.get().asFile
+                    changelog = rootProject.changelog
+                    loaders = [modLoader]
+                    dependencies {
+                        if (modLoader == "fabric") {
+                            required.project "P7dR8mSH" // Fabric API
+                        }
+                        required.project "uNRoUnGT" // MCPitanLib
                     }
-                    required.project "uNRoUnGT" // MCPitanLib
                 }
             }
         }
     }
-
-
 }
 
 allprojects {
