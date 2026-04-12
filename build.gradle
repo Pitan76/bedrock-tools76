@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.5-SNAPSHOT"
     id "dev.architectury.loom-no-remap" version "1.14-SNAPSHOT" apply false
-    id 'com.matthewprenger.cursegradle' version '1.5.0-SNAPSHOT'
+    id 'com.matthewprenger.cursegradle' version '1.5.0'
     id "com.modrinth.minotaur" version "2.+"
 }
 
