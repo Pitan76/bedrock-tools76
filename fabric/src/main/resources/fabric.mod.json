@@ -24,7 +24,6 @@
     ]
   },
   "mixins": [
-    "bedrocktools76.mixins.json",
     "bedrocktools76-common.mixins.json"
   ],
   "depends": {
