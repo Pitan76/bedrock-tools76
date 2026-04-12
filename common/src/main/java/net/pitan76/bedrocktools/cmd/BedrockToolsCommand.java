@@ -5,7 +5,7 @@ import net.pitan76.mcpitanlib.api.command.CommandSettings;
 import net.pitan76.mcpitanlib.api.command.ConfigCommand;
 import net.pitan76.mcpitanlib.api.command.LiteralCommand;
 import net.pitan76.mcpitanlib.api.event.ServerCommandEvent;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.text.TextComponent;
 
 public class BedrockToolsCommand extends LiteralCommand {
     @Override
@@ -19,11 +19,11 @@ public class BedrockToolsCommand extends LiteralCommand {
 
             @Override
             public void execute(ServerCommandEvent e) {
-                e.sendSuccess(TextUtil.literal("[BedrockTools] Reloading..."), false);
+                e.sendSuccess(TextComponent.literal("[BedrockTools] Reloading..."), false);
                 if (Config.reload()) {
-                    e.sendSuccess(TextUtil.literal("[BedrockTools] Reloaded!"), false);
+                    e.sendSuccess(TextComponent.literal("[BedrockTools] Reloaded!"), false);
                 } else {
-                    e.sendFailure(TextUtil.literal("[BedrockTools] Failed to reload!"));
+                    e.sendFailure(TextComponent.literal("[BedrockTools] Failed to reload!"));
                 }
             }
         });
@@ -33,7 +33,7 @@ public class BedrockToolsCommand extends LiteralCommand {
 
     @Override
     public void execute(ServerCommandEvent e) {
-        e.sendSuccess(TextUtil.literal("[BedrockTools] Command List:"
+        e.sendSuccess(TextComponent.literal("[BedrockTools] Command List:"
                 + "\n- /bedrocktools76 reload...Reload config"
                 + "\n- /bedrocktools76 config set [Key] [Value]...Set config"
                 + "\n- /bedrocktools76 config get [Key]...Get config"

@@ -1,14 +1,6 @@
 package net.pitan76.bedrocktools;
 
-import dev.architectury.event.EventResult;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.bedrocktools.cmd.BedrockToolsCommand;
 import net.pitan76.bedrocktools.item.BedrockPickaxeItem;
 import net.pitan76.bedrocktools.item.CreativeShotKillItem;
@@ -16,12 +8,18 @@ import net.pitan76.bedrocktools.item.CreativeTabs;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
-import net.pitan76.mcpitanlib.api.event.v0.AttackEntityEventRegistry;
+import net.pitan76.mcpitanlib.api.event.v1.AttackEntityEventRegistry;
 import net.pitan76.mcpitanlib.api.event.v2.BlockEventRegistry;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.EntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class BedrockTools {
     public static final String MOD_ID = "bedrocktools76";
@@ -46,30 +44,33 @@ public class BedrockTools {
 
         registry.allRegister();
 
-        AttackEntityEventRegistry.register(
-                (player, world, entity, hand, result) -> {
-                    if (!player.isCreative()) return EventResult.pass();
-                    if (!(player.getStackInHand(hand).getItem() instanceof CreativeShotKillItem)) return EventResult.pass();
-                    EntityUtil.kill(entity);
-                    return EventResult.interruptTrue();
+        AttackEntityEventRegistry.register(e -> {
+                    if (!e.player.isCreative()) return CompatActionResult.PASS;
+                    if (!e.getItemWrapperInPlayer().instanceOf(CreativeShotKillItem.class))
+                        return CompatActionResult.PASS;
+
+                    EntityUtil.kill(e.target);
+                    return CompatActionResult.SUCCESS;
                 }
         );
 
         BlockEventRegistry.ON_BREAK.register(e -> {
             Player player = e.player;
-            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
-            if (!(stack.getItem() instanceof BedrockPickaxeItem) || player.isCreative()) return new BlockBreakResult(e.state);
-            BlockState state = e.state;
-            World world = e.world;
-            BlockPos pos = e.pos;
+            ItemStack stack = player.getMidohraStackInHand(Hand.MAIN_HAND);
+            if (!stack.instanceOf(BedrockPickaxeItem.class) || player.isCreative())
+                return new BlockBreakResult(e.state);
 
-            if (state.getBlock() == Blocks.BEDROCK)
-                Block.dropStack(world, pos, ItemStackUtil.create(Blocks.BEDROCK));
-            if (state.getBlock() == Blocks.END_PORTAL_FRAME)
-                Block.dropStack(world, pos, ItemStackUtil.create(Blocks.END_PORTAL_FRAME));
+            BlockState state = e.getMidohraState();
+            World world = e.getMidohraWorld();
+            BlockPos pos = e.getMidohraPos();
 
-            if (stack.getItem() == Items.OBSIDIAN_PICKAXE && !player.isClient())
-                ItemStackUtil.damage(stack, 999, (ServerPlayerEntity) player.getPlayerEntity());
+            if (state.getBlock() == MCBlocks.BEDROCK)
+                world.dropStackOnBlock(pos, MCBlocks.BEDROCK.asItem().createStack());
+            if (state.getBlock() == MCBlocks.END_PORTAL_FRAME)
+                world.dropStackOnBlock(pos, MCBlocks.BEDROCK.asItem().createStack());
+
+            if (stack.getItem().equals(Items.OBSIDIAN_PICKAXE.getWrapper()) && !player.isClient())
+                ItemStackUtil.damage(stack.toMinecraft(), 999, player.getServerPlayer().get());
 
             return new BlockBreakResult(e.state);
         });

@@ -1,16 +1,16 @@
 package net.pitan76.bedrocktools.item;
 
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.pitan76.bedrocktools.BedrockTools;
 import net.pitan76.bedrocktools.Config;
 import net.pitan76.mcpitanlib.api.item.v3.CompatToolMaterial;
 import net.pitan76.mcpitanlib.api.tag.item.RepairIngredientTag;
+import net.pitan76.mcpitanlib.midohra.item.MCItems;
+import net.pitan76.mcpitanlib.midohra.recipe.Ingredient;
 
 public enum ToolMaterials implements CompatToolMaterial {
 
-    OBSIDIAN(Ingredient.ofItems(Items.OBSIDIAN)),
-    BEDROCK(Ingredient.ofItems(Items.BEDROCK)),
+    OBSIDIAN(Ingredient.ofItems(MCItems.OBSIDIAN.get())),
+    BEDROCK(Ingredient.ofItems(MCItems.BEDROCK.get())),
     ;
 
     private final String configPath = "toolmaterials." + this.name().toLowerCase();
@@ -40,8 +40,8 @@ public enum ToolMaterials implements CompatToolMaterial {
         return Config.config.getInt(configPath + ".enchantability");
     }
 
-    public Ingredient getCompatRepairIngredient() {
-        return this.repairIngredient;
+    public net.minecraft.recipe.Ingredient getCompatRepairIngredient() {
+        return this.repairIngredient.getRaw();
     }
 
     @Override
