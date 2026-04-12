@@ -64,9 +64,9 @@ public class BedrockTools {
             World world = e.getMidohraWorld();
             BlockPos pos = e.getMidohraPos();
 
-            if (state.getBlock() == MCBlocks.BEDROCK)
+            if (state.getBlock().equals(MCBlocks.BEDROCK))
                 world.dropStackOnBlock(pos, MCBlocks.BEDROCK.asItem().createStack());
-            if (state.getBlock() == MCBlocks.END_PORTAL_FRAME)
+            if (state.getBlock().equals(MCBlocks.END_PORTAL_FRAME))
                 world.dropStackOnBlock(pos, MCBlocks.BEDROCK.asItem().createStack());
 
             if (stack.getItem().equals(Items.OBSIDIAN_PICKAXE.getWrapper()) && !player.isClient())
