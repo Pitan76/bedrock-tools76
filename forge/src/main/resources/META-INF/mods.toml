@@ -59,7 +59,7 @@ side = "BOTH"
 [[dependencies.bedrocktools76]]
 modId = "mcpitanlib"
 mandatory = true
-versionRange = "[2.0.0,)"
+versionRange = "[3.6.4,)"
 ordering = "NONE"
 side = "BOTH"
 
